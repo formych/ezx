@@ -8,6 +8,8 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 
 	_ "go.uber.org/automaxprocs"
 )
@@ -22,7 +24,19 @@ var (
 	id, _ = os.Hostname()
 )
 
-// cleanup()
+var (
+	httpServer *http.Server
+	grpcServer *grpc.Server
+)
+
+func GetHTTPServer() *http.Server {
+	return httpServer
+}
+
+func GetGRPCServer() *grpc.Server {
+	return grpcServer
+}
+
 func Run() error {
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
@@ -36,10 +50,12 @@ func Run() error {
 
 	var srv transport.Server
 	if config.C.Server.Type == config.GRPCServerType {
-		srv = NewGRPCServer(config.C.Server)
+		srv = grpcServer
+		grpcServer = NewGRPCServer(config.C.Server)
 
 	} else if config.C.Server.Type == config.HTTPServerType {
-		srv = NewHTTPServer(config.C.Server)
+		srv = grpcServer
+		httpServer = NewHTTPServer(config.C.Server)
 	}
 
 	return newApp(logger, srv).Run()
