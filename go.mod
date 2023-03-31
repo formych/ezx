@@ -1,4 +1,4 @@
-module github.com/formych/ezx
+module github.com/fsm-xyz/ezx
 
 go 1.20
 

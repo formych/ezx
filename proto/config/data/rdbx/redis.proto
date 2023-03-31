@@ -1,0 +1,22 @@
+
+syntax = "proto3";
+
+package rdbx;
+
+option go_package = "github.com/fsm-xyz/ezx/data/rdbx;rdbx";
+
+import "google/protobuf/duration.proto";
+
+message Config {
+  string name = 1;
+  string addr = 2;
+  string password = 3;
+  uint32 db = 4;
+  uint32 pool_size = 5;
+  uint32 min_idle_conns = 6;
+  google.protobuf.Duration dial_timeout = 7;
+  google.protobuf.Duration read_timeout = 8;
+  google.protobuf.Duration write_timeout = 9;
+  google.protobuf.Duration max_conn_lifetime = 10;
+  google.protobuf.Duration slow_time = 11;
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package dbx;
+
+option go_package = "github.com/fsm-xyz/ezx/data/dbx;dbx";
+
+import "google/protobuf/duration.proto";
+
+message Config {
+  string name = 1;
+  string type = 2;
+  string addr = 3;
+  string user = 4;
+  string password = 5;
+  string database = 6;
+  string orm = 7;
+  string dsn = 8;
+  uint32 max_open_conns = 9;
+  uint32 max_idle_conns = 10;
+  google.protobuf.Duration conn_timeout = 11;
+  google.protobuf.Duration read_timeout = 12;
+  google.protobuf.Duration write_timeout = 13;
+  google.protobuf.Duration conn_max_idle_time = 14;
+  google.protobuf.Duration conn_max_lifetime = 15;
+}

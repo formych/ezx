@@ -1,0 +1,22 @@
+
+syntax = "proto3";
+
+package log;
+
+option go_package = "github.com/fsm-xyz/ezx/log;log";
+
+message Rotate {
+  string filename = 1;
+  uint32 max_age = 2;
+  uint32 max_size = 3;
+  uint32 max_backups = 4;
+  bool local_time = 5;
+  bool compress = 6;
+}
+
+message Config {
+  string level = 1;
+  string output = 2;
+  bool dev = 3;
+  Rotate rotate = 4;
+}

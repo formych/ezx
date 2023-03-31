@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package config;
+
+import "google/protobuf/duration.proto";
+
+import "data/dbx/db.proto";
+import "data/rdbx/redis.proto";
+import "log/log.proto";
+
+option go_package = "github.com/fsm-xyz/ezx/config;config";
+
+message Service {
+  message Server {
+    string name = 1;
+    string network = 2;
+    string addr = 3;
+    string type = 4;
+    string provider = 5;
+    google.protobuf.Duration timeout = 6;
+  }
+
+  message Prometheus { string addr = 1; }
+
+  message Metrics { Prometheus prometheus = 1; }
+
+  message Data {
+    repeated dbx.Config db = 1;
+    repeated rdbx.Config redis = 2;
+  }
+
+  Server server = 1;
+  log.Config log = 2;
+  Metrics metrics = 3;
+  Data data = 4;
+}

@@ -3,11 +3,11 @@ package ezx
 import (
 	"fmt"
 
-	"github.com/formych/ezx/config"
-	"github.com/formych/ezx/data/dbx"
-	"github.com/formych/ezx/data/rdbx"
-	"github.com/formych/ezx/log"
-	"github.com/formych/ezx/micro/kratos"
+	"github.com/fsm-xyz/ezx/config"
+	"github.com/fsm-xyz/ezx/data/dbx"
+	"github.com/fsm-xyz/ezx/data/rdbx"
+	"github.com/fsm-xyz/ezx/log"
+	"github.com/fsm-xyz/ezx/micro/kratos"
 	"go.uber.org/zap"
 )
 
@@ -25,7 +25,7 @@ func New(bc any) (e *Engine) {
 	// stdLogger.Info("config info", zap.ByteString("service", gdata), zap.ByteString("custem", cdata))
 
 	// db资源初始化
-	if err := dbx.Init(config.C.Data.DB); err != nil {
+	if err := dbx.Init(config.C.Data.Db); err != nil {
 		log.Std.Fatal("init db failed", zap.Error(err))
 		return
 	}

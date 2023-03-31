@@ -15,13 +15,13 @@ type Logger struct {
 }
 
 // New 返回一个Logger
-func New(config Config) *Logger {
-	writer := getLogWriter(config)
+func New(c *Config) *Logger {
+	writer := getLogWriter(c)
 	encoder := getEncoder()
 
-	core := zapcore.NewCore(encoder, writer, getLevel(config.Level))
+	core := zapcore.NewCore(encoder, writer, getLevel(c.Level))
 
-	if config.Dev {
+	if c.Dev {
 		return &Logger{
 			logger: zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1), zap.Development()),
 		}
@@ -48,10 +48,10 @@ func getLevel(level string) zapcore.Level {
 }
 
 func getEncoder() zapcore.Encoder {
-	config := zap.NewProductionEncoderConfig()
-	config.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05.000")
-	config.EncodeCaller = zapcore.FullCallerEncoder
-	return zapcore.NewJSONEncoder(config)
+	c := zap.NewProductionEncoderConfig()
+	c.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05.000")
+	c.EncodeCaller = zapcore.FullCallerEncoder
+	return zapcore.NewJSONEncoder(c)
 }
 
 // 日志输出位置
@@ -61,22 +61,22 @@ const (
 	fileOutput   = "file"
 )
 
-func getLogWriter(config Config) zapcore.WriteSyncer {
+func getLogWriter(c *Config) zapcore.WriteSyncer {
 
-	if config.Outout == stdoutOutput {
+	if c.Output == stdoutOutput {
 		return os.Stdout
 	}
-	if config.Outout == stderrOutput {
+	if c.Output == stderrOutput {
 		return os.Stderr
 	}
 
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   config.Rotate.Filename,
-		MaxSize:    config.Rotate.MaxSize,
-		MaxAge:     config.Rotate.MaxAge,
-		MaxBackups: config.Rotate.MaxBackups,
-		LocalTime:  config.Rotate.LocalTime,
-		Compress:   config.Rotate.Compress,
+		Filename:   c.Rotate.Filename,
+		MaxSize:    int(c.Rotate.MaxSize),
+		MaxAge:     int(c.Rotate.MaxAge),
+		MaxBackups: int(c.Rotate.MaxBackups),
+		LocalTime:  c.Rotate.LocalTime,
+		Compress:   c.Rotate.Compress,
 	}
 	return zapcore.AddSync(lumberJackLogger)
 }
@@ -191,12 +191,12 @@ func Sync() error {
 
 // NewDataLog 创建只用来保存数据的logger
 func NewDataLog(filename string) *Logger {
-	var c = Config{
+	var c = &Config{
 		Level:  "info",
-		Outout: "file",
+		Output: "file",
 		Dev:    false,
 
-		Rotate: Rotate{
+		Rotate: &Rotate{
 			Filename:   filename,
 			MaxSize:    1 << 6,
 			MaxAge:     3,

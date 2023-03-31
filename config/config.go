@@ -2,11 +2,7 @@ package config
 
 import (
 	"flag"
-	"time"
 
-	"github.com/formych/ezx/data/dbx"
-	"github.com/formych/ezx/data/rdbx"
-	"github.com/formych/ezx/log"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 )
@@ -22,30 +18,6 @@ const (
 	HTTPServerType = "http"
 	GRPCServerType = "grpc"
 )
-
-// Service 全局配置
-type Service struct {
-	Server  Server     `json:"server" yaml:"server"`
-	Log     log.Config `json:"log" yaml:"log"`
-	Metrics struct {
-		Prometheus struct {
-			Addr string `yaml:"addr"`
-		} `yaml:"prometheus"`
-	} `yaml:"metrics"`
-	Data struct {
-		DB    []dbx.Config  `json:"db" yaml:"db"`
-		Redis []rdbx.Config `json:"redis" yaml:"redis"`
-	} `yaml:"data"`
-}
-
-type Server struct {
-	Name     int           `yaml:"name"`
-	Type     string        `yaml:"type"`
-	Network  string        `yaml:"network"`
-	Addr     string        `yaml:"addr"`
-	Timeout  time.Duration `yaml:"timeout"`
-	Provider string        `yaml:"provider"`
-}
 
 // Kafka   Kafka            `json:"kafka" yaml:"kafka"`
 // Clients []client.Config  `json:"clients" yaml:"clients"`

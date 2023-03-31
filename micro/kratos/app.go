@@ -3,7 +3,7 @@ package kratos
 import (
 	"os"
 
-	"github.com/formych/ezx/config"
+	"github.com/fsm-xyz/ezx/config"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
@@ -36,10 +36,10 @@ func Run() error {
 
 	var srv transport.Server
 	if config.C.Server.Type == config.GRPCServerType {
-		srv = NewGRPCServer(&config.C.Server)
+		srv = NewGRPCServer(config.C.Server)
 
 	} else if config.C.Server.Type == config.HTTPServerType {
-		srv = NewHTTPServer(&config.C.Server)
+		srv = NewHTTPServer(config.C.Server)
 	}
 
 	return newApp(logger, srv).Run()
