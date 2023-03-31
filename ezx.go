@@ -26,11 +26,7 @@ func New(bc any) (e *Engine) {
 	// 打印配置
 	printConfig(bc)
 	// metircs
-
-	if err := metircs(); err != nil {
-		log.Std.Fatal("init db failed", zap.Error(err))
-		return
-	}
+	go metircs()
 
 	// db资源初始化
 	if err := dbx.Init(config.C.Data.Db); err != nil {
