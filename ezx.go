@@ -1,6 +1,7 @@
 package ezx
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/fsm-xyz/ezx/config"
@@ -9,6 +10,7 @@ import (
 	"github.com/fsm-xyz/ezx/log"
 	"github.com/fsm-xyz/ezx/micro/kratos"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // Engine ...
@@ -22,7 +24,7 @@ func New(bc any) (e *Engine) {
 	log.Init(config.C.Log)
 
 	// 打印配置
-	// stdLogger.Info("config info", zap.ByteString("service", gdata), zap.ByteString("custem", cdata))
+	printConfig(bc)
 
 	// db资源初始化
 	if err := dbx.Init(config.C.Data.Db); err != nil {
@@ -40,11 +42,16 @@ func New(bc any) (e *Engine) {
 	return &Engine{}
 
 }
+func printConfig(bc any) {
+	data, _ := protojson.Marshal(&config.C)
+	bdata, _ := json.Marshal(&bc)
+	log.Std.Info("config info", zap.ByteString("data", data), zap.ByteString("bdata", bdata))
+}
 func (e *Engine) Run() error {
 	// 关闭资源
-	defer Close()
+	defer e.Close()
 	// 处理业务自定义的退出逻辑
-	defer runHandlers()
+	defer e.runHandlers()
 
 	if config.C.Server.Provider == "kratos" {
 		if err := kratos.Run(); err != nil {
@@ -62,26 +69,26 @@ var handlers = []func(){}
 func runHandler(handler func()) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Std.Error("exit handler error:", zap.Error(fmt.Errorf("%v", err)))
+			log.Std.Error("exit handler error:", zap.Error(fmt.Errorf("%s", err)))
 		}
 	}()
 
 	handler()
 }
 
-func runHandlers() {
+func (e *Engine) runHandlers() {
 	for _, handler := range handlers {
 		runHandler(handler)
 	}
 }
 
 // RegisterExitHandlers 提供业务注册退出函数
-func RegisterExitHandlers(hs ...func()) {
+func (e *Engine) RegisterExitHandlers(hs ...func()) {
 	handlers = append(handlers, hs...)
 }
 
 // Close 关闭资源
-func Close() {
+func (e *Engine) Close() {
 	dbx.Close()
 	rdbx.Close()
 	log.Close()
