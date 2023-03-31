@@ -1,0 +1,54 @@
+# trace:
+#   endpoint: http://127.0.0.1:14268/api/traces
+server:
+  name: 123
+  type: http
+  addr: 0.0.0.0:8000
+  timeout: 1s
+  provider: kratos      # 底层实现方, kratos, kitex, gin, grpc
+  
+log:                            
+  level: info                   # 日志级别
+  output: file                  # 日志输出，stdout,stderr和默认是输出到控制台，file是输出到文件
+  dev: false                    # false是生产环境, true为开发环境
+  rotate:
+    filename: logs/ezx.log      # 日志输出位置
+    maxage: 3                   # 日志保存最长时间，天数
+    maxsize: 128                # 日志文件最大大小，MiB
+    maxbackups: 3               # 日志最大备份个数
+    localtime: true             # 使用本地时间切割
+    compress: false             # 文件是否压缩
+metrics:
+  prometheus:
+    addr: 0.0.0.0:8810
+
+data:
+  db:                             # mysql配置
+  - name: test                  # client唯一标识
+    driver: mysql               # 数据库类型     
+    addr: 127.0.0.1:3306        # 地址
+    user: test_user             # 用户
+    password: 123456            # 密码
+    database: test              # 数据库
+    max_open_conns: 10          # 最大打开连接数
+    max_idle_conns: 10          # 最大空闲连接数
+    conn_max_idle_time: 300s    # 空闲连接数过期时间
+    conn_max_lifetime: 1800s    # 连接的有效时间
+    conn_timeout: 2s            # 拨号超时时间
+    read_timeout: 2s            # 读超时时间
+    write_timeout: 2s           # 写超时时间
+    orm_type: sql               # client类型，sql, sqlx, gorm
+  redis:
+  - name: test
+    addr: 127.0.0.1:6379
+    password: "123456"
+    db: 0
+    pool_size: 1                  # 连接数上限
+    min_idle_conns: 1             # 最小空闲连接数
+    dial_timeout: 200ms           # 拨号时间
+    read_timeout: 200ms           # 读超时时间
+    write_timeout: 200ms          # 写超时时间
+    max_conn_lifetime: 1800s
+    slow_time: 1s
+
+# 业务自定义的配置
