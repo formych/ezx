@@ -25,6 +25,8 @@ var (
 )
 
 var (
+	srv transport.Server
+
 	httpServer *http.Server
 	grpcServer *grpc.Server
 )
@@ -35,6 +37,17 @@ func GetHTTPServer() *http.Server {
 
 func GetGRPCServer() *grpc.Server {
 	return grpcServer
+}
+
+func Init() {
+	if config.C.Server.Type == config.GRPCServerType {
+		srv = grpcServer
+		grpcServer = NewGRPCServer(config.C.Server)
+		return
+	}
+	// 默认当作http服务
+	srv = grpcServer
+	httpServer = NewHTTPServer(config.C.Server)
 }
 
 func Run() error {
@@ -48,28 +61,12 @@ func Run() error {
 		"span.id", tracing.SpanID(),
 	)
 
-	var srv transport.Server
-	if config.C.Server.Type == config.GRPCServerType {
-		srv = grpcServer
-		grpcServer = NewGRPCServer(config.C.Server)
-
-	} else if config.C.Server.Type == config.HTTPServerType {
-		srv = grpcServer
-		httpServer = NewHTTPServer(config.C.Server)
-	}
-
-	return newApp(logger, srv).Run()
-}
-
-func newApp(logger log.Logger, srv ...transport.Server) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
 		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
 		kratos.Logger(logger),
-		kratos.Server(
-			srv...,
-		),
-	)
+		kratos.Server(srv),
+	).Run()
 }

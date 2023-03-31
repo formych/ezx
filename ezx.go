@@ -28,6 +28,10 @@ func New(bc any) (e *Engine) {
 	// metircs
 	go metircs()
 
+	if config.C.Server.Provider == "kratos" {
+		kratos.Init()
+	}
+
 	// db资源初始化
 	if err := dbx.Init(config.C.Data.Db); err != nil {
 		log.Std.Fatal("init db failed", zap.Error(err))
