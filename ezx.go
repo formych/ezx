@@ -3,12 +3,12 @@ package ezx
 import (
 	"fmt"
 
+	"github.com/formych/ezx/config"
+	"github.com/formych/ezx/data/dbx"
+	"github.com/formych/ezx/data/rdbx"
+	"github.com/formych/ezx/log"
+	"github.com/formych/ezx/micro/kratos"
 	"go.uber.org/zap"
-	"xyz-zyx.co/config"
-	"xyz-zyx.co/data/dbx"
-	"xyz-zyx.co/data/rdbx"
-	"xyz-zyx.co/log"
-	"xyz-zyx.co/micro/kratos"
 )
 
 // Engine ...

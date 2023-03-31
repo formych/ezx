@@ -1,4 +1,4 @@
-module xyz-zyx.co
+module github.com/formych/ezx
 
 go 1.20
 

@@ -1,9 +1,9 @@
 package kratos
 
 import (
+	"github.com/formych/ezx/config"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"xyz-zyx.co/config"
 )
 
 // NewHTTPServer new an HTTP server.

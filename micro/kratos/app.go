@@ -3,11 +3,11 @@ package kratos
 import (
 	"os"
 
+	"github.com/formych/ezx/config"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport"
-	"xyz-zyx.co/config"
 
 	_ "go.uber.org/automaxprocs"
 )

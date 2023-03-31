@@ -4,11 +4,11 @@ import (
 	"flag"
 	"time"
 
+	"github.com/formych/ezx/data/dbx"
+	"github.com/formych/ezx/data/rdbx"
+	"github.com/formych/ezx/log"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
-	"xyz-zyx.co/data/dbx"
-	"xyz-zyx.co/data/rdbx"
-	"xyz-zyx.co/log"
 )
 
 var (

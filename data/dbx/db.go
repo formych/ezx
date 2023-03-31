@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/formych/ezx/log"
 	_ "github.com/go-sql-driver/mysql" // 自动
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"xyz-zyx.co/log"
 )
 
 // 后续动态reload服务增加锁
