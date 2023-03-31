@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/fsm-xyz/ezx/log"
-	_ "github.com/go-sql-driver/mysql" // 自动
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
@@ -130,7 +130,7 @@ func (c *Config) validate() {
 
 	if c.Type == "mysql" {
 		c.Dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local&timeout=%s&readTimeout=%s&writeTimeout=%s&interpolateParams=true",
-			c.User, c.Password, c.Addr, c.Database, c.ConnTimeout, c.ReadTimeout, c.WriteTimeout)
+			c.User, c.Password, c.Addr, c.Database, c.ConnTimeout.AsDuration(), c.ReadTimeout.AsDuration(), c.WriteTimeout.AsDuration())
 	} else if c.Type == "postgres" {
 		c.Dsn = "postgres://" + c.User + ":" + c.Password + "@" + c.Addr + "/" + c.Database + "?sslmode=disable"
 	}

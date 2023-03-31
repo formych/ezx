@@ -25,7 +25,7 @@ metrics:
 data:
   db:                             # mysql配置
   - name: test                  # client唯一标识
-    driver: mysql               # 数据库类型     
+    type: mysql                 # 数据库类型     
     addr: 127.0.0.1:3306        # 地址
     user: test_user             # 用户
     password: 123456            # 密码
