@@ -9,7 +9,7 @@ import (
 
 var (
 	// C 全局配置
-	C = &Service{}
+	C = Service{}
 	// flagconf is the config flag.
 	flagconf string
 )
