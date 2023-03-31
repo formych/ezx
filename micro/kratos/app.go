@@ -7,7 +7,6 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
-	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
@@ -25,8 +24,6 @@ var (
 )
 
 var (
-	srv transport.Server
-
 	httpServer *http.Server
 	grpcServer *grpc.Server
 )
@@ -41,12 +38,10 @@ func GetGRPCServer() *grpc.Server {
 
 func Init() {
 	if config.C.Server.Type == config.GRPCServerType {
-		srv = grpcServer
 		grpcServer = NewGRPCServer(config.C.Server)
 		return
 	}
 	// 默认当作http服务
-	srv = grpcServer
 	httpServer = NewHTTPServer(config.C.Server)
 }
 
@@ -67,6 +62,6 @@ func Run() error {
 		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
 		kratos.Logger(logger),
-		kratos.Server(srv),
+		kratos.Server(httpServer),
 	).Run()
 }
