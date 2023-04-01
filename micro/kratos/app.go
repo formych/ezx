@@ -56,12 +56,19 @@ func Run() error {
 		"span.id", tracing.SpanID(),
 	)
 
+	var op kratos.Option
+	if grpcServer != nil {
+		op = kratos.Server(grpcServer)
+	} else {
+		op = kratos.Server(httpServer)
+	}
+
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
 		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
 		kratos.Logger(logger),
-		kratos.Server(httpServer),
+		op,
 	).Run()
 }

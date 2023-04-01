@@ -116,6 +116,11 @@ func (l *Logger) Fatal(msg string, fields ...zap.Field) {
 	l.logger.Fatal(msg, fields...)
 }
 
+// With ...
+func (l *Logger) With(fields ...zap.Field) *Logger {
+	return &Logger{l.logger.With(fields...)}
+}
+
 // Sync ...
 func (l *Logger) Sync() error {
 	return l.logger.Sync()
