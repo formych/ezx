@@ -11,6 +11,7 @@ log:
   level: info                   # 日志级别
   output: file                  # 日志输出，stdout,stderr和默认是输出到控制台，file是输出到文件
   dev: true                     # false是生产环境, true为开发环境
+  provider: "zerolog"           # zap, zerolog
   rotate:
     filename: logs/ezx.log      # 日志输出位置
     maxage: 3                   # 日志保存最长时间，天数
@@ -52,3 +53,4 @@ data:
     slow_time: 1s
 
 # 业务自定义的配置
+hello: hello

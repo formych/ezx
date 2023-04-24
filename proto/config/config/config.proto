@@ -6,7 +6,7 @@ import "google/protobuf/duration.proto";
 
 import "data/dbx/db.proto";
 import "data/rdbx/redis.proto";
-import "log/log.proto";
+import "config/log.proto";
 
 option go_package = "github.com/fsm-xyz/ezx/config;config";
 
@@ -30,7 +30,7 @@ message Service {
   }
 
   Server server = 1;
-  log.Config log = 2;
+  Config log = 2;
   Metrics metrics = 3;
   Data data = 4;
 }

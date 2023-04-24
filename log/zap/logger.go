@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/fsm-xyz/ezx/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -15,13 +16,13 @@ type Logger struct {
 }
 
 // New 返回一个Logger
-func New(c *Config) *Logger {
-	writer := getLogWriter(c)
+func New() *Logger {
+	writer := getLogWriter()
 	encoder := getEncoder()
 
-	core := zapcore.NewCore(encoder, writer, getLevel(c.Level))
+	core := zapcore.NewCore(encoder, writer, getLevel(config.C.Log.Level))
 
-	if c.Dev {
+	if config.C.Log.Dev {
 		return &Logger{
 			logger: zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1), zap.Development()),
 		}
@@ -61,8 +62,8 @@ const (
 	fileOutput   = "file"
 )
 
-func getLogWriter(c *Config) zapcore.WriteSyncer {
-
+func getLogWriter() zapcore.WriteSyncer {
+	c := config.C.Log
 	if c.Output == stdoutOutput {
 		return os.Stdout
 	}
@@ -192,24 +193,4 @@ func Fatal(ctx context.Context, msg string, fields ...zap.Field) {
 // Sync ...
 func Sync() error {
 	return defaultL.logger.Sync()
-}
-
-// NewDataLog 创建只用来保存数据的logger
-func NewDataLog(filename string) *Logger {
-	var c = &Config{
-		Level:  "info",
-		Output: "file",
-		Dev:    false,
-
-		Rotate: &Rotate{
-			Filename:   filename,
-			MaxSize:    1 << 6,
-			MaxAge:     3,
-			MaxBackups: 1,
-			LocalTime:  true,
-			Compress:   false,
-		},
-	}
-
-	return New(c)
 }

@@ -1,9 +1,9 @@
 
 syntax = "proto3";
 
-package log;
+package config;
 
-option go_package = "github.com/fsm-xyz/ezx/log;log";
+option go_package = "github.com/fsm-xyz/ezx/config;config";
 
 message Rotate {
   string filename = 1;
@@ -19,4 +19,5 @@ message Config {
   string output = 2;
   bool dev = 3;
   Rotate rotate = 4;
+  string provider = 5; // zap和zerolog
 }

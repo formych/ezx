@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fsm-xyz/ezx/log"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"go.uber.org/zap"
+	"github.com/rs/zerolog/log"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -75,23 +74,23 @@ func GetGormDB(name string) *gorm.DB {
 func Close() {
 	for k, v := range sqlMap {
 		if err := v.Close(); err != nil {
-			log.Std.Error("close db failed", zap.String("name", k), zap.Error(err))
+			log.Error().Err(err).Str("name", k).Msg("close db failed")
 		}
 	}
 
 	for k, v := range sqlxMap {
 		if err := v.Close(); err != nil {
-			log.Std.Error("close sqlx db failed", zap.String("name", k), zap.Error(err))
+			log.Error().Err(err).Str("name", k).Msg("close sqlx db failed")
 		}
 	}
 
 	// 新版本的gorm
 	for k, v := range gormMap {
 		if db, err := v.DB(); err != nil {
-			log.Std.Error("close gorm db failed", zap.String("name", k), zap.Error(err))
+			log.Error().Err(err).Str("name", k).Msg("close gorm db failed")
 		} else {
 			if err = db.Close(); err != nil {
-				log.Std.Error("close gorm db failed", zap.String("name", k), zap.Error(err))
+				log.Error().Err(err).Str("name", k).Msg("close gorm db failed2")
 			}
 		}
 	}

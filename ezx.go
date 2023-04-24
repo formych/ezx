@@ -9,8 +9,9 @@ import (
 	"github.com/fsm-xyz/ezx/data/rdbx"
 	"github.com/fsm-xyz/ezx/log"
 	"github.com/fsm-xyz/ezx/micro/kratos"
-	"go.uber.org/zap"
 	"google.golang.org/protobuf/encoding/protojson"
+
+	zlog "github.com/rs/zerolog/log"
 )
 
 // Engine ...
@@ -21,7 +22,7 @@ func New(bc any) (e *Engine) {
 	// 初始化配置
 	config.Init(bc)
 	// 初始化logger
-	log.Init(config.C.Log)
+	log.Init()
 
 	// 打印配置
 	printConfig(bc)
@@ -34,13 +35,13 @@ func New(bc any) (e *Engine) {
 
 	// db资源初始化
 	if err := dbx.Init(config.C.Data.Db); err != nil {
-		log.Std.Fatal("init db failed", zap.Error(err))
+		zlog.Fatal().Err(err).Msg("init db failed")
 		return
 	}
 
 	// db资源初始化
 	if err := rdbx.Init(config.C.Data.Redis); err != nil {
-		log.Std.Fatal("init redis failed", zap.Error(err))
+		zlog.Fatal().Err(err).Msg("init redis failed")
 		return
 	}
 
@@ -50,7 +51,7 @@ func New(bc any) (e *Engine) {
 func printConfig(bc any) {
 	data, _ := protojson.Marshal(&config.C)
 	bdata, _ := json.Marshal(&bc)
-	log.Std.Info("config info", zap.ByteString("data", data), zap.ByteString("bdata", bdata))
+	zlog.Info().Bytes("data", data).Bytes("bdata", bdata).Msg("config info")
 }
 func (e *Engine) Run() error {
 	// 关闭资源
@@ -60,7 +61,7 @@ func (e *Engine) Run() error {
 
 	if config.C.Server.Provider == "kratos" {
 		if err := kratos.Run(); err != nil {
-			log.Std.Error("service exit", zap.Error(err))
+			zlog.Error().Err(err).Msg("service exit")
 			return err
 		}
 	}
@@ -74,7 +75,7 @@ var handlers = []func(){}
 func runHandler(handler func()) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Std.Error("exit handler error:", zap.Error(fmt.Errorf("%s", err)))
+			zlog.Error().Err(fmt.Errorf("%s", err)).Msg("exit handler error")
 		}
 	}()
 

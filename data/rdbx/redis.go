@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/fsm-xyz/ezx/log"
 	"github.com/redis/go-redis/v9"
-	"go.uber.org/zap"
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -38,7 +37,7 @@ func Close() {
 	// 关闭redis
 	for k, v := range redisMap {
 		if err := v.Close(); err != nil {
-			log.Std.Error("close db failed", zap.String("name", k), zap.Error(err))
+			log.Error().Err(err).Str("name", k).Msg("close db failed")
 		}
 	}
 }
