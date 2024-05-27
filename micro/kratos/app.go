@@ -10,6 +10,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/rs/zerolog"
+	zlog "github.com/rs/zerolog/log"
 
 	"go.opentelemetry.io/otel/trace"
 	_ "go.uber.org/automaxprocs"
@@ -58,6 +59,7 @@ func Run() error {
 		"span.id", tracing.SpanID(),
 	)
 
+	zlog.Hook(LogHook{})
 	var op kratos.Option
 	if grpcServer != nil {
 		op = kratos.Server(grpcServer)
