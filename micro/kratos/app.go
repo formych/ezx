@@ -9,7 +9,9 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/rs/zerolog"
 
+	"go.opentelemetry.io/otel/trace"
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -71,4 +73,16 @@ func Run() error {
 		kratos.Logger(logger),
 		op,
 	).Run()
+}
+
+type LogHook struct{}
+
+func (LogHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
+	traceID := ""
+	ctx := e.GetCtx()
+	if span := trace.SpanContextFromContext(ctx); span.HasTraceID() {
+		traceID = span.TraceID().String()
+	}
+
+	e.Str("trace", traceID)
 }
