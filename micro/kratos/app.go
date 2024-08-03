@@ -64,6 +64,15 @@ func Run() error {
 	var op kratos.Option
 	if grpcServer != nil {
 		op = kratos.Server(grpcServer)
+		// 异步开启http监听
+		go kratos.New(
+			kratos.ID(id),
+			kratos.Name(Name),
+			kratos.Version(Version),
+			kratos.Metadata(map[string]string{}),
+			kratos.Logger(logger),
+			kratos.Server(httpServer),
+		).Run()
 	} else {
 		op = kratos.Server(httpServer)
 	}

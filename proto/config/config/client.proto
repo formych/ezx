@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package config;
+
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/fsm-xyz/ezx/config;config";
+
+message Client {
+  string name = 1; // client 名字
+  string type = 2; // 连接类型 http, grpc
+  string addr = 3; // 地址
+  google.protobuf.Duration timeout = 6;
+}

@@ -22,7 +22,7 @@ log:
     compress: false             # 文件是否压缩
 metrics:
   prometheus:
-    addr: 0.0.0.0:8810
+    addr: 0.0.0.0:8805
 
 data:
   db:
@@ -59,4 +59,5 @@ hello: hello
 clients:
   - name: user
     type: grpc
-    addr: 0.0.0.1:8080
+    addr: 0.0.0.0:8010
+    timeout: 5s
