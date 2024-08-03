@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/fsm-xyz/ezx/client"
 	"github.com/fsm-xyz/ezx/config"
 	"github.com/fsm-xyz/ezx/data/dbx"
 	"github.com/fsm-xyz/ezx/data/rdbx"
@@ -32,7 +33,8 @@ func New(bc any) (e *Engine) {
 	if config.C.Server.Provider == "kratos" {
 		kratos.Init()
 	}
-
+	// client初始化
+	client.Register(config.C.Clients)
 	// db资源初始化
 	if err := dbx.Init(config.C.Data.Db); err != nil {
 		zlog.Fatal().Err(err).Msg("init db failed")
@@ -95,6 +97,7 @@ func (e *Engine) RegisterExitHandlers(hs ...func()) {
 
 // Close 关闭资源
 func (e *Engine) Close() {
+	client.Close()
 	dbx.Close()
 	rdbx.Close()
 	log.Close()

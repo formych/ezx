@@ -3,44 +3,39 @@ package client
 import (
 	"context"
 	"fmt"
-	"time"
 
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/fsm-xyz/ezx/config"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var store = map[string]*grpc.ClientConn{}
 
-// Config 配置  区分服务类型和地址
-type Config struct {
-	Name     string        `json:"name" yaml:"name"`
-	Type     string        `json:"type" yaml:"type"`
-	From     string        `json:"from" yaml:"from"`
-	Endpoint string        `json:"endpoint" yaml:"endpoint"`
-	Balancer string        `json:"balancer" yaml:"balancer"`
-	Timeout  time.Duration `json:"timeout" yaml:"timeout"`
+// Client 配置  区分服务类型和地址
+type Client struct {
+	*config.Client
 }
 
-func (c Config) dial(addr string) (*grpc.ClientConn, error) {
+func (c *Client) dial() (*grpc.ClientConn, error) {
 	return c.direct()
 }
 
 // 直接进行连接
-func (c Config) direct() (*grpc.ClientConn, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), c.Timeout)
+func (c *Client) direct() (*grpc.ClientConn, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.Timeout.AsDuration())
 	defer cancel()
 	return grpc.DialContext(
 		ctx,
-		c.Endpoint,
-		grpc.WithInsecure(),
+		c.Addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),
-		grpc.WithUnaryInterceptor(
-			grpc_middleware.ChainUnaryClient(
-			// metrics.UnaryClientInterceptor,
-			// trace.UnaryClientInterceptor,
-			// cost.UnaryClientInterceptor,
-			),
-		),
+		// grpc.WithUnaryInterceptor(
+		// grpc_middleware.ChainUnaryClient(
+		// metrics.UnaryClientInterceptor,
+		// trace.UnaryClientInterceptor,
+		// cost.UnaryClientInterceptor,
+		// ),
+		// ),
 	)
 }
 
@@ -56,20 +51,23 @@ const (
 
 // Register 批量注册client
 // 只支持grpc直连模式
-func Register(addr string, clients []Config) {
-	for _, c := range clients {
+func Register(clients []*config.Client) {
+	for k := range clients {
+		c := &Client{
+			clients[k],
+		}
 		if c.Type != grpcType {
-			fmt.Printf("register client type not support, name: %s\n", c.Name)
+			fmt.Printf("register client type not support, name: %s\n", clients[k].Name)
 			continue
 		}
 
-		conn, err := c.dial(addr)
+		conn, err := c.dial()
 		if err != nil {
-			fmt.Printf("register client failed, name: %s, err: %s\n", c.Name, err)
+			fmt.Printf("register client failed, name: %s, err: %s\n", clients[k].Name, err)
 			continue
 		}
-		fmt.Printf("register client success, name: %s\n", c.Name)
-		store[c.Name] = conn
+		fmt.Printf("register client success, name: %s\n", clients[k].Name)
+		store[clients[k].Name] = conn
 	}
 }
 

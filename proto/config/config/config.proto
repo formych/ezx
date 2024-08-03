@@ -7,6 +7,7 @@ import "google/protobuf/duration.proto";
 import "data/dbx/db.proto";
 import "data/rdbx/redis.proto";
 import "config/log.proto";
+import "config/client.proto";
 
 option go_package = "github.com/fsm-xyz/ezx/config;config";
 
@@ -15,9 +16,10 @@ message Service {
     string name = 1;
     string network = 2;
     string addr = 3;
-    string type = 4;
-    string provider = 5;
-    google.protobuf.Duration timeout = 6;
+    string addr2 = 4;
+    string type = 5;
+    string provider = 6;
+    google.protobuf.Duration timeout = 7;
   }
 
   message Prometheus { string addr = 1; }
@@ -33,4 +35,5 @@ message Service {
   Config log = 2;
   Metrics metrics = 3;
   Data data = 4;
+  repeated Client clients = 5;
 }

@@ -42,7 +42,8 @@ func GetGRPCServer() *grpc.Server {
 func Init() {
 	if config.C.Server.Type == config.GRPCServerType {
 		grpcServer = NewGRPCServer(config.C.Server)
-		return
+		// 服务是grpc时默认开启http端口
+		config.C.Server.Addr = config.C.Server.Addr2
 	}
 	// 默认当作http服务
 	httpServer = NewHTTPServer(config.C.Server)

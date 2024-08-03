@@ -4,6 +4,7 @@ server:
   name: "123"
   type: http
   addr: 0.0.0.0:8000
+  addr2: 0.0.0.0:8001
   timeout: 1s
   provider: kratos              # 底层实现方, kratos, kitex, gin, grpc
   
@@ -25,32 +26,37 @@ metrics:
 
 data:
   db:
-  - name: test                  # client唯一标识
-    type: mysql                 # 数据库类型     
-    addr: 127.0.0.1:3306        # 地址
-    user: root                  # 用户
-    password: root              # 密码
-    database: test              # 数据库
-    max_open_conns: 10          # 最大打开连接数
-    max_idle_conns: 10          # 最大空闲连接数
-    conn_max_idle_time: 300s    # 空闲连接数过期时间
-    conn_max_lifetime: 1800s    # 连接的有效时间
-    conn_timeout: 0.2s            # 拨号超时时间
-    read_timeout: 0.2s            # 读超时时间
-    write_timeout: 0.2s           # 写超时时间
-    orm: sql                      # client类型，sql, sqlx, gorm
+  # - name: test                  # client唯一标识
+  #   type: mysql                 # 数据库类型     
+  #   addr: 127.0.0.1:3306        # 地址
+  #   user: root                  # 用户
+  #   password: root              # 密码
+  #   database: test              # 数据库
+  #   max_open_conns: 10          # 最大打开连接数
+  #   max_idle_conns: 10          # 最大空闲连接数
+  #   conn_max_idle_time: 300s    # 空闲连接数过期时间
+  #   conn_max_lifetime: 1800s    # 连接的有效时间
+  #   conn_timeout: 0.2s            # 拨号超时时间
+  #   read_timeout: 0.2s            # 读超时时间
+  #   write_timeout: 0.2s           # 写超时时间
+  #   orm: sql                      # client类型，sql, sqlx, gorm
   redis:
-  - name: test
-    addr: 127.0.0.1:6379
-    password: "123456"
-    db: 0
-    pool_size: 1                    # 连接数上限
-    min_idle_conns: 1               # 最小空闲连接数
-    dial_timeout: 0.2s              # 拨号时间
-    read_timeout: 0.2s              # 读超时时间
-    write_timeout: 0.2s             # 写超时时间
-    max_conn_lifetime: 1800s
-    slow_time: 1s
+  # - name: test
+  #   addr: 127.0.0.1:6379
+  #   password: "123456"
+  #   db: 0
+  #   pool_size: 1                    # 连接数上限
+  #   min_idle_conns: 1               # 最小空闲连接数
+  #   dial_timeout: 0.2s              # 拨号时间
+  #   read_timeout: 0.2s              # 读超时时间
+  #   write_timeout: 0.2s             # 写超时时间
+  #   max_conn_lifetime: 1800s
+  #   slow_time: 1s
 
 # 业务自定义的配置
 hello: hello
+
+clients:
+  - name: user
+    type: grpc
+    addr: 0.0.0.1:8080

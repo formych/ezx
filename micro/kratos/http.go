@@ -26,3 +26,23 @@ func NewHTTPServer(c *config.Service_Server) *http.Server {
 	srv := http.NewServer(opts...)
 	return srv
 }
+
+// NewHTTPServer new an HTTP server.
+func NewHTTPServer2(c *config.Service_Server) *http.Server {
+	var opts = []http.ServerOption{
+		http.Middleware(
+			recovery.Recovery(),
+		),
+	}
+	if c.Network != "" {
+		opts = append(opts, http.Network(c.Network))
+	}
+	if c.Addr != "" {
+		opts = append(opts, http.Address(c.Addr2))
+	}
+	if c.Timeout != durationpb.New(0) {
+		opts = append(opts, http.Timeout(c.Timeout.AsDuration()))
+	}
+	srv := http.NewServer(opts...)
+	return srv
+}
