@@ -40,13 +40,13 @@ func GetGRPCServer() *grpc.Server {
 }
 
 func Init() {
-	if config.C.Server.Type == config.GRPCServerType {
-		grpcServer = NewGRPCServer(config.C.Server)
-		// 服务是grpc时默认开启http端口
-		config.C.Server.Addr = config.C.Server.Addr2
-	}
-	// 默认当作http服务
+	// 默认开启http服务
 	httpServer = NewHTTPServer(config.C.Server)
+	// 服务是grpc时默认取addr2
+	if config.C.Server.Type == config.GRPCServerType {
+		config.C.Server.Addr = config.C.Server.Addr2
+		grpcServer = NewGRPCServer(config.C.Server)
+	}
 }
 
 func Run() error {
